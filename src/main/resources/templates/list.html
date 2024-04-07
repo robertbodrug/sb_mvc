@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Notes</title>
+</head>
+<body>
+<tr th:each="note: ${notes}" >
+    <td>Id= </td>
+    <td th:text="${note.id}"></td><br>
+    <td>Title= </td>
+  <td th:text="${note.title}"></td><br>
+    <td>Content= </td>
+  <td th:text="${note.content}"></td><br>
+    <form th:action="@{/note/delete}" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${note.id}">
+        <button type="submit">Delete</button>
+    </form>
+    <form th:action="@{/note/edit(id=${note.id})}" method="get" style="display:inline;">
+        <input type="hidden" name="id" th:value="${note.id}">
+        <button type="submit">Update</button>
+    </form>
+<br>
+</tr>
+<br>
+<h3>Create Note</h3>
+<form th:action="@{/note/create}" method="post" th:object="${newNote}">
+    <input type="hidden" th:field="*{id}">
+    <label for="title"  >Title:</label>
+    <br>
+    <input type="text" id="title" th:field="*{title}" >
+    <br>
+    <label for="content" >Content:</label>
+    <br>
+    <textarea id="content" th:field="*{content}" ></textarea>
+    <br>
+    <button type="submit">Save</button>
+</form>
+
+</body>
+</html>
