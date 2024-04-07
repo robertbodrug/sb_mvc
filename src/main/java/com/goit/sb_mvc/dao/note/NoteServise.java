@@ -1,4 +1,4 @@
-package com.goit.sb_mvc.dao;
+package com.goit.sb_mvc.dao.note;
 
 import com.goit.sb_mvc.exception.IllegalDataNoteExeption;
 import com.goit.sb_mvc.model.Note;
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class NoteServi {
+public class NoteServise {
     private final NoteRepository noteRepository;
 
     public List<Note> listAll(){

@@ -1,6 +1,6 @@
 package com.goit.sb_mvc.controlers;
 
-import com.goit.sb_mvc.dao.NoteServi;
+import com.goit.sb_mvc.dao.note.NoteServise;
 import com.goit.sb_mvc.exception.IllegalDataNoteExeption;
 import com.goit.sb_mvc.model.Note;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.FileNotFoundException;
 @Validated
@@ -17,7 +16,7 @@ import java.io.FileNotFoundException;
 @Controller
 public class NoteController {
     public static final String REDIRECT_NOTE_LIST = "redirect:/note/list";
-    @Autowired private NoteServi noteService;
+    @Autowired private NoteServise noteService;
 
     @GetMapping("/list")
     public ModelAndView getNote(){
@@ -25,16 +24,16 @@ public class NoteController {
     }
 
     @PostMapping("/delete")
-    public String delete(@NotNull @RequestParam("id")Long id) throws FileNotFoundException {
+    public String delete(@NotNull @RequestParam("id")Long id) {
         noteService.deleteById(id);
         return REDIRECT_NOTE_LIST;
     }
     @GetMapping("/edit")
-    public ModelAndView edit(@NotNull @RequestParam("id")Long id) throws FileNotFoundException {
+    public ModelAndView edit(@NotNull @RequestParam("id")Long id){
         return new ModelAndView("edit").addObject("note",noteService.getById(id));
     }
     @PostMapping("/edit")
-    public String editNote(@ModelAttribute("note") Note updateNote) throws FileNotFoundException {
+    public String editNote(@ModelAttribute("note") Note updateNote) {
         try {
             noteService.update(updateNote);
         } catch (IllegalDataNoteExeption e) {
@@ -44,7 +43,7 @@ public class NoteController {
     }
 
     @PostMapping("/create")
-    public String createNote(@ModelAttribute("note") Note newNode) throws FileNotFoundException {
+    public String createNote(@ModelAttribute("note") Note newNode)  {
         try {
             noteService.add(newNode);
         } catch (IllegalDataNoteExeption e) {
