@@ -1,7 +1,8 @@
 package com.goit.sb_mvc.controlers;
 
+import com.goit.sb_mvc.dao.NoteServi;
+import com.goit.sb_mvc.exception.IllegalDataNoteExeption;
 import com.goit.sb_mvc.model.Note;
-import com.goit.sb_mvc.services.NoteService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,8 @@ import java.io.FileNotFoundException;
 @RequestMapping("/note")
 @Controller
 public class NoteController {
-    @Autowired private NoteService noteService;
+    public static final String REDIRECT_NOTE_LIST = "redirect:/note/list";
+    @Autowired private NoteServi noteService;
 
     @GetMapping("/list")
     public ModelAndView getNote(){
@@ -23,9 +25,9 @@ public class NoteController {
     }
 
     @PostMapping("/delete")
-    public RedirectView delete(@NotNull @RequestParam("id")Long id) throws FileNotFoundException {
+    public String delete(@NotNull @RequestParam("id")Long id) throws FileNotFoundException {
         noteService.deleteById(id);
-        return new RedirectView("list") ;
+        return REDIRECT_NOTE_LIST;
     }
     @GetMapping("/edit")
     public ModelAndView edit(@NotNull @RequestParam("id")Long id) throws FileNotFoundException {
@@ -33,13 +35,21 @@ public class NoteController {
     }
     @PostMapping("/edit")
     public String editNote(@ModelAttribute("note") Note updateNote) throws FileNotFoundException {
-        noteService.update(updateNote);
-        return "redirect:/note/list";
+        try {
+            noteService.update(updateNote);
+        } catch (IllegalDataNoteExeption e) {
+            return REDIRECT_NOTE_LIST;
+        }
+        return REDIRECT_NOTE_LIST;
     }
 
     @PostMapping("/create")
     public String createNote(@ModelAttribute("note") Note newNode) throws FileNotFoundException {
-        noteService.add(newNode);
-        return "redirect:/note/list";
+        try {
+            noteService.add(newNode);
+        } catch (IllegalDataNoteExeption e) {
+            return REDIRECT_NOTE_LIST;
+        }
+        return REDIRECT_NOTE_LIST;
     }
 }
